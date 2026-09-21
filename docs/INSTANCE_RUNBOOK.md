@@ -56,5 +56,6 @@ agent:react-orchestrator
   tool:langgraph-observability-workflow
     node:*
       subagent:*
-        tool:*
+        subagent-node:*
+          tool:*
 ```

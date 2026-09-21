@@ -31,8 +31,8 @@ The prototype implements this reference architecture:
 - a custom Python React-loop orchestrator
 - a LangGraph workflow invoked as a tool
 - deterministic graph nodes wrapped with Relay middleware
-- nested subagent scopes for workflow mapping and trace validation
-- nested tool scopes under the subagents that own each tool call
+- compiled LangGraph subgraphs for workflow mapping and trace validation subagents
+- nested tool scopes under the subagent graph nodes that own each tool call
 
 The runner validates that key parent-child scope edges are present, so a passing
 run means the traces are hierarchical rather than flat.

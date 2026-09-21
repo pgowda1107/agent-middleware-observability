@@ -6,6 +6,8 @@ from typing import Any, Callable, Literal, TypedDict
 import nemo_relay
 from langgraph.graph import END, START, StateGraph
 
+from agent_middleware_observability.subagents import get_trace_validator_graph, get_workflow_mapper_graph
+
 NodeResult = dict[str, Any]
 
 
@@ -98,9 +100,18 @@ def map_workflow_node(state: ObservabilityState) -> NodeResult:
     with nemo_relay.scope.scope(
         "subagent:workflow-mapper",
         nemo_relay.ScopeType.Agent,
-        metadata={"responsibility": "derive nodes and edges from the reference architecture"},
+        metadata={
+            "responsibility": "derive nodes and edges from the reference architecture",
+            "runtime": "compiled-langgraph-subgraph",
+        },
     ):
-        workflow_map = _extract_state_graph(state["request"])
+        result = get_workflow_mapper_graph().invoke(
+            {
+                "request": state["request"],
+                "run_id": state.get("run_id", ""),
+            }
+        )
+        workflow_map = result["workflow_map"]
         nemo_relay.scope.event("subagent.result", data={"node_count": len(workflow_map["nodes"])})
     return {"workflow_map": workflow_map}
 
@@ -109,9 +120,18 @@ def assess_relay_fit_node(state: ObservabilityState) -> NodeResult:
     with nemo_relay.scope.scope(
         "subagent:trace-validator",
         nemo_relay.ScopeType.Agent,
-        metadata={"responsibility": "define trace hierarchy validation criteria"},
+        metadata={
+            "responsibility": "define trace hierarchy validation criteria",
+            "runtime": "compiled-langgraph-subgraph",
+        },
     ):
-        relay_fit = _assess_expected_hierarchy(state.get("workflow_map", {}))
+        result = get_trace_validator_graph().invoke(
+            {
+                "workflow_map": state.get("workflow_map", {}),
+                "run_id": state.get("run_id", ""),
+            }
+        )
+        relay_fit = result["relay_fit"]
         nemo_relay.scope.event("subagent.result", data=relay_fit)
     return {"relay_fit": relay_fit}
 
@@ -131,53 +151,11 @@ def recommend_next_steps_node(state: ObservabilityState) -> NodeResult:
             "1. Keep the custom Python React-loop as the top-level agent scope.",
             "2. Treat the LangGraph workflow as a tool scope invoked by that orchestrator.",
             "3. Wrap every deterministic LangGraph node with Relay middleware.",
-            "4. Spawn subagent scopes inside nodes when a node delegates work.",
+            "4. Invoke compiled LangGraph subgraphs for subagent work inside parent nodes.",
             "5. Emit tool scopes beneath the owning subagent or node so traces do not flatten.",
         ]
     )
     return {"answer": answer}
-
-
-def _extract_state_graph(request: str) -> dict[str, Any]:
-    with nemo_relay.scope.scope(
-        "tool:extract_state_graph",
-        nemo_relay.ScopeType.Tool,
-        input={"request_chars": len(request)},
-    ):
-        nodes = [
-            "plan",
-            "map_workflow",
-            "assess_relay_fit",
-            "recommend_next_steps",
-        ]
-        edges = [
-            ("START", "plan"),
-            ("plan", "map_workflow"),
-            ("map_workflow", "assess_relay_fit"),
-            ("assess_relay_fit", "recommend_next_steps"),
-            ("recommend_next_steps", "END"),
-        ]
-        nemo_relay.scope.event(
-            "tool.output",
-            data={"nodes": nodes, "edges": edges, "source": "reference-architecture"},
-            severity=nemo_relay.LogSeverity.Info,
-        )
-        return {"nodes": nodes, "edges": edges}
-
-
-def _assess_expected_hierarchy(workflow_map: dict[str, Any]) -> dict[str, Any]:
-    with nemo_relay.scope.scope(
-        "tool:define_trace_checks",
-        nemo_relay.ScopeType.Tool,
-        input={"nodes": workflow_map.get("nodes", [])},
-    ):
-        result = {
-            "target": "nested Relay scopes for orchestrator -> LangGraph tool -> node -> subagent -> tool",
-            "must_not_be_flat": True,
-            "expected_node_scopes": [f"node:{name}" for name in workflow_map.get("nodes", [])],
-        }
-        nemo_relay.scope.event("tool.output", data=result, severity=nemo_relay.LogSeverity.Info)
-        return result
 
 
 def _summarize_state(state: dict[str, Any]) -> dict[str, Any]:

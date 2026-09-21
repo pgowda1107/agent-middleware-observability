@@ -22,10 +22,12 @@ EXPECTED_EDGES = [
     ("tool:langgraph-observability-workflow", "node:plan"),
     ("tool:langgraph-observability-workflow", "node:map_workflow"),
     ("node:map_workflow", "subagent:workflow-mapper"),
-    ("subagent:workflow-mapper", "tool:extract_state_graph"),
+    ("subagent:workflow-mapper", "subagent-node:workflow-mapper.extract_state_graph"),
+    ("subagent-node:workflow-mapper.extract_state_graph", "tool:extract_state_graph"),
     ("tool:langgraph-observability-workflow", "node:assess_relay_fit"),
     ("node:assess_relay_fit", "subagent:trace-validator"),
-    ("subagent:trace-validator", "tool:define_trace_checks"),
+    ("subagent:trace-validator", "subagent-node:trace-validator.define_trace_checks"),
+    ("subagent-node:trace-validator.define_trace_checks", "tool:define_trace_checks"),
     ("tool:langgraph-observability-workflow", "node:recommend_next_steps"),
 ]
 
