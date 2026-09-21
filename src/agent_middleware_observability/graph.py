@@ -98,7 +98,7 @@ def map_workflow_node(state: ObservabilityState) -> NodeResult:
     with nemo_relay.scope.scope(
         "subagent:workflow-mapper",
         nemo_relay.ScopeType.Agent,
-        metadata={"responsibility": "derive nodes and edges from meeting notes"},
+        metadata={"responsibility": "derive nodes and edges from the reference architecture"},
     ):
         workflow_map = _extract_state_graph(state["request"])
         nemo_relay.scope.event("subagent.result", data={"node_count": len(workflow_map["nodes"])})
@@ -159,7 +159,7 @@ def _extract_state_graph(request: str) -> dict[str, Any]:
         ]
         nemo_relay.scope.event(
             "tool.output",
-            data={"nodes": nodes, "edges": edges, "source": "meeting-notes"},
+            data={"nodes": nodes, "edges": edges, "source": "reference-architecture"},
             severity=nemo_relay.LogSeverity.Info,
         )
         return {"nodes": nodes, "edges": edges}

@@ -1,6 +1,6 @@
 # Middleware-Based Workflow Mapping
 
-This prototype models the meeting notes as a small deterministic state graph:
+This prototype models a small deterministic state graph:
 
 ```mermaid
 flowchart TD

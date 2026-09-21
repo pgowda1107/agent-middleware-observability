@@ -1,7 +1,7 @@
 # Agent Middleware Observability Prototype
 
 This workspace contains a runnable prototype for the middleware-based approach
-from the meeting notes. It uses:
+for LangGraph agent observability. It uses:
 
 - `nemo-relay==0.9.0`
 - `nemo-relay-cli-bin==0.9.0`
@@ -26,7 +26,7 @@ Outputs are written to:
 
 ## What It Builds
 
-The prototype mirrors the architecture from the discussion:
+The prototype implements this reference architecture:
 
 - a custom Python React-loop orchestrator
 - a LangGraph workflow invoked as a tool
@@ -40,7 +40,7 @@ run means the traces are hierarchical rather than flat.
 By default the runner uses only the explicit middleware scopes. You can enable
 `NemoRelayCallbackHandler` in `ReactLoopOrchestrator(include_langgraph_callbacks=True)`
 when you also want LangGraph's built-in runnable scopes, but that intentionally
-adds extra internal spans between the workflow tool and each wrapped node.
+adds extra framework spans between the workflow tool and each wrapped node.
 
 ## Run On An Instance
 
