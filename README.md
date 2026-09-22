@@ -19,10 +19,27 @@ python -m pip install --no-deps -e .
 agent-observability-demo
 ```
 
+For the fuller custom-StateGraph implementation that wraps actual model and
+tool call sites with Relay managed execution, run:
+
+```bash
+agent-managed-custom-demo
+```
+
+That command works offline with a scripted model. To use build.nvidia.com
+models, set `OPENAI_BASE_URL`, `MODEL_NAME`, and either `NVIDIA_API_KEY` or
+`OPENAI_API_KEY`, then run:
+
+```bash
+agent-managed-custom-demo --live
+```
+
 Outputs are written to:
 
 - `outputs/trace_events.jsonl`
 - `outputs/trace_summary.md`
+- `outputs/managed_custom_trace_events.jsonl`
+- `outputs/managed_custom_trace_summary.md`
 
 ## What It Builds
 
@@ -33,6 +50,13 @@ The prototype implements this reference architecture:
 - deterministic graph nodes wrapped with Relay middleware
 - compiled LangGraph subgraphs for workflow mapping and trace validation subagents
 - nested tool scopes under the subagent graph nodes that own each tool call
+
+It also includes a managed custom-StateGraph runner that mirrors the reference
+implementation pattern:
+
+- model nodes run through `nemo_relay.typed.llm_execute`
+- LangGraph `ToolNode` calls run through `nemo_relay.typed.tool_execute`
+- subagent handoffs are nested under the managed orchestrator tool call
 
 The runner validates that key parent-child scope edges are present, so a passing
 run means the traces are hierarchical rather than flat.

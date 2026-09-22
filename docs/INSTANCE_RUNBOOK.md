@@ -35,6 +35,21 @@ Or use:
 bash scripts/run_demo.sh
 ```
 
+For the managed custom-StateGraph path:
+
+```bash
+.venv/bin/agent-managed-custom-demo
+```
+
+To run it with build.nvidia.com models:
+
+```bash
+export OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
+export MODEL_NAME=<model-id-from-build.nvidia.com>
+export NVIDIA_API_KEY=<your-key>
+.venv/bin/agent-managed-custom-demo --live
+```
+
 ## Health Checks
 
 ```bash
@@ -46,10 +61,9 @@ bash scripts/run_demo.sh
 ## Live Model Hookup
 
 The checked-in demo is deterministic so trace hierarchy is easy to validate. To
-connect a live NVIDIA-hosted model later, copy `.env.example` to `.env`, set
-`NVIDIA_API_KEY`, and replace the deterministic node logic with a model call
-through `langchain-nvidia-ai-endpoints`. Keep the Relay node wrappers in place so
-the trace shape remains:
+connect a live NVIDIA-hosted model, set `OPENAI_BASE_URL`, `MODEL_NAME`, and
+`NVIDIA_API_KEY`, then run `agent-managed-custom-demo --live`. Keep the Relay
+managed wrappers in place so the trace shape remains:
 
 ```text
 agent:react-orchestrator

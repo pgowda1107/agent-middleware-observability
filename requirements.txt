@@ -1,4 +1,6 @@
 nemo-relay[langgraph,langchain-nvidia]==0.9.0
 nemo-relay-cli-bin==0.9.0
+openai
+langchain-openai
 python-dotenv==1.2.3
 rich==15.0.0

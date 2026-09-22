@@ -10,12 +10,15 @@ requires-python = ">=3.11"
 dependencies = [
   "nemo-relay[langgraph,langchain-nvidia]==0.9.0",
   "nemo-relay-cli-bin==0.9.0",
+  "openai",
+  "langchain-openai",
   "python-dotenv==1.2.3",
   "rich==15.0.0",
 ]
 
 [project.scripts]
 agent-observability-demo = "agent_middleware_observability.run_demo:main"
+agent-managed-custom-demo = "agent_middleware_observability.run_managed_custom_demo:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

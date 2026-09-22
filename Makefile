@@ -1,4 +1,4 @@
-.PHONY: setup run check docker-build docker-run relay-doctor
+.PHONY: setup run run-managed check docker-build docker-run relay-doctor
 
 setup:
 	python3 -m venv .venv
@@ -8,6 +8,9 @@ setup:
 
 run:
 	.venv/bin/agent-observability-demo
+
+run-managed:
+	.venv/bin/agent-managed-custom-demo
 
 check:
 	.venv/bin/python -m compileall src
