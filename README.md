@@ -52,12 +52,25 @@ relay-trace-rl-pipeline \
 That writes local episode, transition, and summary files under `outputs/rl/`.
 See `docs/RL_TRACE_PIPELINE.md` for the data shape.
 
+To extract token-supervision rows from the same trace:
+
+```bash
+relay-model-call-samples \
+  --trace outputs/managed_custom_trace_events.jsonl \
+  --output-dir outputs/model_calls
+```
+
+That writes `model_call_samples.jsonl` and `sft_messages.jsonl`. These preserve
+the model request messages and the target assistant content or tool call, so they
+are the faithful samples to review before fine-tuning.
+
 To create NeMo Gym data and run the local scripted rollout:
 
 ```bash
 make setup-nemo-gym
 make run-managed
 make run-rl-pipeline
+make run-model-call-samples
 make run-nemo-gym-data
 make run-nemo-gym-validate
 make run-nemo-gym-test

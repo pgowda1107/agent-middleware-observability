@@ -49,6 +49,14 @@ To create sample RL data from the managed Relay trace:
   --output-dir outputs/rl
 ```
 
+To create faithful model-call samples from the same trace:
+
+```bash
+.venv/bin/relay-model-call-samples \
+  --trace outputs/managed_custom_trace_events.jsonl \
+  --output-dir outputs/model_calls
+```
+
 To run it with build.nvidia.com models:
 
 ```bash

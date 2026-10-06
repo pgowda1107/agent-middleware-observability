@@ -40,6 +40,39 @@ The converter writes three local files:
 
 Generated output files are ignored by git.
 
+These files are structural. They are useful for reward shaping, trace hierarchy
+validation, and handoff scoring, but they are not enough to teach a model which
+assistant tokens or tool-call arguments to generate.
+
+## Model-Call Samples
+
+Create faithful model-call samples from the same Relay trace:
+
+```bash
+.venv/bin/relay-model-call-samples \
+  --trace outputs/managed_custom_trace_events.jsonl \
+  --output-dir outputs/model_calls
+```
+
+The extractor reads each successful Relay `llm` scope and pairs the start event's
+request `messages` with the end event's assistant response. It writes:
+
+- `outputs/model_calls/model_call_samples.jsonl`: full sample metadata plus
+  request messages and assistant target
+- `outputs/model_calls/sft_messages.jsonl`: compact chat/SFT rows with
+  `messages = request messages + assistant target`
+- `outputs/model_calls/summary.md`: counts and sample inventory
+
+For handoff/tool learning, the important fields are preserved:
+
+- assistant tool calls use `tool_calls[].function.name` and
+  `tool_calls[].function.arguments`
+- tool results keep the matching `tool_call_id`
+- final assistant content is stored as the next target message
+
+Prompt and completion text is preserved so these files should be reviewed before
+sharing. Auth-like keys are redacted by default.
+
 ## Episode Records
 
 Each line in `episodes.jsonl` contains:

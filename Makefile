@@ -2,7 +2,7 @@ NEMO_GYM := .venv-nemo-gym/bin/gym
 NEMO_GYM_PATH := $(PWD)/.venv-nemo-gym/bin:$(PATH)
 NEMO_GYM_CONFIGS := --config resources_servers/relay_handoff/configs/relay_handoff.yaml --config responses_api_models/scripted_handoff_model/configs/scripted_handoff_model.yaml --search-dir .
 
-.PHONY: setup setup-nemo-gym run run-managed run-rl-pipeline run-nemo-gym-data run-nemo-gym-validate run-nemo-gym-test run-nemo-gym-collate run-nemo-gym-rollout check docker-build docker-run relay-doctor
+.PHONY: setup setup-nemo-gym run run-managed run-rl-pipeline run-model-call-samples run-nemo-gym-data run-nemo-gym-validate run-nemo-gym-test run-nemo-gym-collate run-nemo-gym-rollout check docker-build docker-run relay-doctor
 
 setup:
 	python3 -m venv .venv
@@ -23,6 +23,9 @@ run-managed:
 
 run-rl-pipeline:
 	.venv/bin/relay-trace-rl-pipeline --input outputs/managed_custom_trace_events.jsonl --output-dir outputs/rl
+
+run-model-call-samples:
+	.venv/bin/relay-model-call-samples --trace outputs/managed_custom_trace_events.jsonl --output-dir outputs/model_calls
 
 run-nemo-gym-data:
 	.venv/bin/relay-to-nemo-gym-data --trace outputs/managed_custom_trace_events.jsonl --output-dir outputs/nemo_gym

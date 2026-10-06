@@ -27,12 +27,17 @@ Run the managed Relay demo and convert the trace:
 ```bash
 make run-managed
 make run-rl-pipeline
+make run-model-call-samples
 make run-nemo-gym-data
 ```
 
 `run-nemo-gym-data` writes local data under `outputs/nemo_gym/` and stages
 `example.jsonl`, `train.jsonl`, and `validation.jsonl` into the resources server
 data directory.
+
+`run-model-call-samples` writes `outputs/model_calls/`. Those rows preserve the
+actual model request messages and assistant targets. Use them for SFT/RL data
+review; use `outputs/rl/` for structural trajectory and reward records.
 
 ## Validate And Run
 
