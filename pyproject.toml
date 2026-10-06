@@ -19,6 +19,7 @@ dependencies = [
 [project.scripts]
 agent-observability-demo = "agent_middleware_observability.run_demo:main"
 agent-managed-custom-demo = "agent_middleware_observability.run_managed_custom_demo:main"
+relay-trace-rl-pipeline = "agent_middleware_observability.rl_trace_pipeline:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

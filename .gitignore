@@ -4,8 +4,6 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .env
-outputs/*.jsonl
-outputs/*.md
-outputs/*.txt
-outputs/*.zip
+outputs/**
+!outputs/
 !outputs/.gitkeep

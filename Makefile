@@ -1,4 +1,4 @@
-.PHONY: setup run run-managed check docker-build docker-run relay-doctor
+.PHONY: setup run run-managed run-rl-pipeline check docker-build docker-run relay-doctor
 
 setup:
 	python3 -m venv .venv
@@ -11,6 +11,9 @@ run:
 
 run-managed:
 	.venv/bin/agent-managed-custom-demo
+
+run-rl-pipeline:
+	.venv/bin/relay-trace-rl-pipeline --input outputs/managed_custom_trace_events.jsonl --output-dir outputs/rl
 
 check:
 	.venv/bin/python -m compileall src

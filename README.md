@@ -41,6 +41,17 @@ Outputs are written to:
 - `outputs/managed_custom_trace_events.jsonl`
 - `outputs/managed_custom_trace_summary.md`
 
+To turn a Relay trace into reward-labeled sample RL data:
+
+```bash
+relay-trace-rl-pipeline \
+  --input outputs/managed_custom_trace_events.jsonl \
+  --output-dir outputs/rl
+```
+
+That writes local episode, transition, and summary files under `outputs/rl/`.
+See `docs/RL_TRACE_PIPELINE.md` for the data shape.
+
 ## What It Builds
 
 The prototype implements this reference architecture:

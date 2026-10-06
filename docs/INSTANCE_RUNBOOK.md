@@ -41,6 +41,14 @@ For the managed custom-StateGraph path:
 .venv/bin/agent-managed-custom-demo
 ```
 
+To create sample RL data from the managed Relay trace:
+
+```bash
+.venv/bin/relay-trace-rl-pipeline \
+  --input outputs/managed_custom_trace_events.jsonl \
+  --output-dir outputs/rl
+```
+
 To run it with build.nvidia.com models:
 
 ```bash
