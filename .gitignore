@@ -1,9 +1,15 @@
 .venv/
+.venv-nemo-gym/
 .DS_Store
 __pycache__/
+.pytest_cache/
+cache/
 *.py[cod]
 *.egg-info/
 .env
 outputs/**
 !outputs/
 !outputs/.gitkeep
+resources_servers/**/.venv/
+responses_api_models/**/.venv/
+responses_api_agents/

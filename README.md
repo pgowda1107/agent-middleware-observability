@@ -52,6 +52,22 @@ relay-trace-rl-pipeline \
 That writes local episode, transition, and summary files under `outputs/rl/`.
 See `docs/RL_TRACE_PIPELINE.md` for the data shape.
 
+To create NeMo Gym data and run the local scripted rollout:
+
+```bash
+make setup-nemo-gym
+make run-managed
+make run-rl-pipeline
+make run-nemo-gym-data
+make run-nemo-gym-validate
+make run-nemo-gym-test
+make run-nemo-gym-collate
+make run-nemo-gym-rollout
+```
+
+See `docs/NEMO_GYM_RUNBOOK.md` and the notebooks in `notebooks/` for the
+walkthrough.
+
 ## What It Builds
 
 The prototype implements this reference architecture:
@@ -71,6 +87,14 @@ implementation pattern:
 
 The runner validates that key parent-child scope edges are present, so a passing
 run means the traces are hierarchical rather than flat.
+
+The NeMo Gym scaffold adds:
+
+- `resources_servers/relay_handoff`, a resources server with handoff tool routes
+  and a verifier that scores expected tool handoffs
+- `responses_api_models/scripted_handoff_model`, a local scripted Responses API
+  model for deterministic Gym rollouts
+- notebooks for the Relay-to-RL and Relay-to-NeMo-Gym flow
 
 By default the runner uses only the explicit middleware scopes. You can enable
 `NemoRelayCallbackHandler` in `ReactLoopOrchestrator(include_langgraph_callbacks=True)`
